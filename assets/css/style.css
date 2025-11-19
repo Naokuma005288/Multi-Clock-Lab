@@ -1,0 +1,1125 @@
+/* ベース設定 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --accent: #4f7dff;
+  --accent-soft: rgba(79, 125, 255, 0.15);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.35);
+  --transition-fast: 0.18s ease-out;
+  --transition-normal: 0.25s ease-out;
+}
+
+/* テーマ（ライト／ダーク） */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Helvetica Neue", "Hiragino Sans", "Yu Gothic UI", "Meiryo", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+body.theme-dark {
+  background: radial-gradient(circle at top, #1f2937, #020617 60%);
+  color: #f9fafb;
+}
+
+body.theme-light {
+  background: radial-gradient(circle at top, #e5f0ff, #ffffff 60%);
+  color: #111827;
+}
+
+/* アプリ全体 */
+.app {
+  width: 100%;
+  max-width: 1024px;
+  margin: 16px;
+  padding: 16px 18px;
+  border-radius: 24px;
+  backdrop-filter: blur(18px);
+  background: rgba(15, 23, 42, 0.8);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.theme-light .app {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 768px) {
+  .app {
+    margin: 8px;
+    padding: 12px 10px;
+  }
+}
+
+/* ヘッダー */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 4px 2px;
+}
+
+.branding {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.logo-clock {
+  font-size: 1.5rem;
+}
+
+.site-title {
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.site-version {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ヘッダー系ボタン（設定・テーマ） */
+.theme-toggle {
+  border: none;
+  background: rgba(15, 23, 42, 0.6);
+  color: inherit;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+body.theme-light .theme-toggle {
+  background: rgba(243, 244, 246, 0.95);
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  background: rgba(15, 23, 42, 0.85);
+}
+
+body.theme-light .theme-toggle:hover {
+  background: rgba(229, 231, 235, 1);
+}
+
+/* メイン */
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* タブ */
+.tab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.7);
+}
+
+body.theme-light .tab-nav {
+  background: rgba(243, 244, 246, 0.9);
+}
+
+.tab-button {
+  border: none;
+  flex: 1 0 auto;
+  min-width: 90px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.tab-button.active {
+  background: var(--accent-soft);
+  color: #e5edff;
+  transform: translateY(-1px);
+}
+
+body.theme-light .tab-button.active {
+  background: rgba(79, 125, 255, 0.12);
+  color: #1d4ed8;
+}
+
+/* タブ内容（フェードイン） */
+.tab-content {
+  display: none;
+  padding: 16px 10px 10px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.tab-content.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 共通カード */
+.card {
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  background: radial-gradient(
+    circle at top left,
+    rgba(148, 163, 184, 0.4),
+    rgba(15, 23, 42, 0.95)
+  );
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+body.theme-light .card {
+  background: radial-gradient(circle at top left, rgba(191, 219, 254, 0.8), #ffffff);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+/* 時計レイアウト */
+.clock-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .clock-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* デジタル時計カード */
+.digital-clock-card {
+}
+
+.digital-time {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+}
+
+.digital-time .digit {
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  display: inline-block;
+  min-width: 1ch;
+  text-align: center;
+  transform-origin: center bottom;
+}
+
+.digital-time .digit-separator {
+  font-size: clamp(2.1rem, 3.5vw, 2.8rem);
+  opacity: 0.8;
+}
+
+/* フリップ風アニメーション */
+.digit.digit-flip {
+  animation: digitFlip 0.25s ease-out;
+}
+
+@keyframes digitFlip {
+  0% {
+    transform: scaleY(1);
+    filter: none;
+  }
+  50% {
+    transform: scaleY(0.2);
+    filter: blur(1px);
+  }
+  100% {
+    transform: scaleY(1);
+    filter: none;
+  }
+}
+
+.digital-date {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.digital-controls {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+/* アナログ時計カード */
+.analog-clock-card {
+  background: radial-gradient(circle at bottom, rgba(30, 64, 175, 0.4), #020617);
+  border: 1px solid rgba(129, 140, 248, 0.5);
+}
+
+body.theme-light .analog-clock-card {
+  background: radial-gradient(circle at bottom, rgba(191, 219, 254, 0.9), #ffffff);
+  border-color: rgba(129, 140, 248, 0.5);
+}
+
+.analog-title {
+  font-size: 0.9rem;
+  text-align: center;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+/* アナログ時計本体 */
+.analog-clock {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.clock-face {
+  position: relative;
+  width: min(260px, 70vw);
+  height: min(260px, 70vw);
+  border-radius: 50%;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  border: 6px solid rgba(148, 163, 184, 0.9);
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.8), 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* 目盛りリング */
+.clock-face::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+/* 針（中心合わせ済み） */
+.hand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: 50% 100%;
+  transform: translate(-50%, -100%) rotate(0deg);
+  border-radius: 999px;
+}
+
+.hour-hand {
+  width: 6px;
+  height: 26%;
+  background: linear-gradient(to top, #64748b, #e5e7eb);
+}
+
+.minute-hand {
+  width: 4px;
+  height: 35%;
+  background: linear-gradient(to top, #4f46e5, #e0f2fe);
+}
+
+.second-hand {
+  width: 2px;
+  height: 40%;
+  background: #f97373;
+  transition: transform 0.08s linear;
+}
+
+/* 中心の丸 */
+.center-dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  border: 3px solid #111827;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* pill ボタン */
+.pill-button {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.6);
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    border-color var(--transition-fast), color var(--transition-fast);
+}
+
+body.theme-light .pill-button {
+  background: rgba(243, 244, 246, 0.95);
+}
+
+.pill-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: rgba(79, 125, 255, 0.18);
+  border-color: rgba(129, 140, 248, 0.9);
+}
+
+.pill-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+
+/* primary ボタン */
+.primary-button {
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: var(--accent);
+  color: #e5edff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+  box-shadow: 0 10px 25px rgba(79, 125, 255, 0.35);
+}
+
+.primary-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #3b6bff;
+  box-shadow: 0 14px 30px rgba(79, 125, 255, 0.45);
+}
+
+.primary-button:disabled {
+  opacity: 0.55;
+  cursor: default;
+  box-shadow: none;
+  transform: none;
+}
+
+/* クリック時の押し込み感 */
+.primary-button:active:not(:disabled),
+.pill-button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+/* ツール共通カード */
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tool-title {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* ツール表示部 */
+.tool-display {
+  font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  text-align: center;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.7);
+}
+
+body.theme-light .tool-display {
+  background: rgba(243, 244, 246, 0.95);
+}
+
+/* ストップウォッチ表示 */
+.stopwatch-display {
+  font-size: clamp(2rem, 3.5vw, 2.5rem);
+  letter-spacing: 0.12em;
+}
+
+/* タイマー表示 */
+.timer-display {
+  font-size: clamp(2rem, 3.5vw, 2.5rem);
+  letter-spacing: 0.12em;
+}
+
+/* タイマー終了時の演出（点滅） */
+.timer-display.timer-finished {
+  animation: timerBlink 0.8s steps(2, start) infinite;
+  border-color: #f97373;
+}
+
+/* タイマー残り10秒警告 */
+.timer-display.timer-warning {
+  color: #facc15;
+  animation: timerPulse 0.6s ease-in-out infinite;
+}
+
+@keyframes timerBlink {
+  0% {
+    transform: scale(1);
+    color: #e5e7eb;
+  }
+  50% {
+    transform: scale(1.02);
+    color: #f97373;
+  }
+  100% {
+    transform: scale(1);
+    color: #e5e7eb;
+  }
+}
+
+@keyframes timerPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ツールボタン行 */
+.tool-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .tool-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tool-buttons button {
+    width: 100%;
+  }
+}
+
+/* ラップ一覧 */
+.lap-list {
+  margin-top: 4px;
+}
+
+.lap-list-header {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.lap-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.lap-table th,
+.lap-table td {
+  padding: 4px 6px;
+  text-align: right;
+}
+
+.lap-table th:first-child,
+.lap-table td:first-child {
+  text-align: left;
+}
+
+.lap-table thead {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.lap-table tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+body.theme-light .lap-table tbody tr:nth-child(even) {
+  background: rgba(243, 244, 246, 0.9);
+}
+
+.lap-empty {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+/* タイマー入力行 */
+.timer-input-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.timer-input-label {
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.timer-input-label input {
+  width: 80px;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: rgba(15, 23, 42, 0.8);
+  color: inherit;
+  font-size: 0.9rem;
+}
+
+body.theme-light .timer-input-label input {
+  background: rgba(248, 250, 252, 1);
+}
+
+/* 数値入力の矢印消し */
+.timer-input-label input::-webkit-outer-spin-button,
+.timer-input-label input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.timer-input-label input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* タイマープリセット */
+.timer-presets {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-presets-label {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+/* タイマー状態表示 */
+.timer-status {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  text-align: center;
+  opacity: 0.85;
+}
+
+/* アラームカード */
+.alarm-card {
+}
+
+/* アラーム追加フォーム */
+.alarm-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.alarm-time-label,
+.alarm-label-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.alarm-time-label input,
+.alarm-label-label input {
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: rgba(15, 23, 42, 0.85);
+  color: inherit;
+  font-size: 0.9rem;
+}
+
+body.theme-light .alarm-time-label input,
+body.theme-light .alarm-label-label input {
+  background: rgba(248, 250, 252, 1);
+}
+
+.alarm-add-btn {
+  white-space: nowrap;
+}
+
+/* アラーム一覧 */
+.alarm-list {
+  margin-top: 8px;
+}
+
+.alarm-list-header {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.alarm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.alarm-table th,
+.alarm-table td {
+  padding: 4px 6px;
+  text-align: left;
+}
+
+.alarm-table thead {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.alarm-table tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+body.theme-light .alarm-table tbody tr:nth-child(even) {
+  background: rgba(243, 244, 246, 0.9);
+}
+
+.alarm-empty {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+/* アラーム用トグルスイッチ */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: rgba(148, 163, 184, 0.8);
+  border-radius: 999px;
+  transition: 0.2s;
+}
+
+.switch-slider::before {
+  content: "";
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  top: 3px;
+  border-radius: 50%;
+  background-color: #020617;
+  transition: 0.2s;
+}
+
+.switch input:checked + .switch-slider {
+  background-color: #22c55e;
+}
+
+.switch input:checked + .switch-slider::before {
+  transform: translateX(16px);
+}
+
+/* アイコンボタン */
+.icon-button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 2px 4px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  border-radius: 6px;
+  transition: background var(--transition-fast), opacity var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.icon-button:hover {
+  background: rgba(148, 163, 184, 0.2);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+/* アラームバナー（スライドイン＋ちょい拡大） */
+.alarm-banner {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(251, 191, 36, 0.9);
+  background: rgba(253, 224, 71, 0.1);
+  font-size: 0.85rem;
+  display: none;
+  opacity: 0;
+  transform: translateY(4px) scale(0.98);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.alarm-banner.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0) scale(1.02);
+}
+
+.alarm-note {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+/* ポモドーロ */
+.pomodoro-card {
+  transition: background 0.6s ease, border-color 0.6s ease;
+}
+
+/* フェーズごとの背景色 */
+.pomodoro-card.phase-work {
+  background: radial-gradient(
+    circle at top,
+    rgba(248, 113, 113, 0.4),
+    rgba(15, 23, 42, 0.95)
+  );
+  border-color: rgba(248, 113, 113, 0.8);
+}
+
+body.theme-light .pomodoro-card.phase-work {
+  background: radial-gradient(circle at top, rgba(254, 202, 202, 0.9), #ffffff);
+  border-color: rgba(248, 113, 113, 0.8);
+}
+
+.pomodoro-card.phase-break {
+  background: radial-gradient(
+    circle at top,
+    rgba(52, 211, 153, 0.45),
+    rgba(15, 23, 42, 0.95)
+  );
+  border-color: rgba(52, 211, 153, 0.9);
+}
+
+body.theme-light .pomodoro-card.phase-break {
+  background: radial-gradient(circle at top, rgba(187, 247, 208, 0.9), #ffffff);
+  border-color: rgba(34, 197, 94, 0.9);
+}
+
+.pomodoro-card.phase-longbreak {
+  background: radial-gradient(
+    circle at top,
+    rgba(56, 189, 248, 0.45),
+    rgba(15, 23, 42, 0.95)
+  );
+  border-color: rgba(59, 130, 246, 0.9);
+}
+
+body.theme-light .pomodoro-card.phase-longbreak {
+  background: radial-gradient(circle at top, rgba(191, 219, 254, 0.9), #ffffff);
+  border-color: rgba(59, 130, 246, 0.9);
+}
+
+.pomodoro-status {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.pom-phase {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.pomodoro-display {
+  font-size: clamp(2rem, 3.5vw, 2.5rem);
+  letter-spacing: 0.12em;
+}
+
+/* フェーズごとの色（枠） */
+.pomodoro-display.phase-work {
+  border-color: rgba(252, 165, 165, 0.9);
+}
+
+.pomodoro-display.phase-break,
+.pomodoro-display.phase-longBreak {
+  border-color: rgba(52, 211, 153, 0.9);
+}
+
+/* 進捗ドット */
+.pomodoro-progress {
+  margin-top: 4px;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.pom-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.9);
+  background: transparent;
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.pom-dot.completed {
+  background: rgba(34, 197, 94, 0.9);
+  border-color: rgba(34, 197, 94, 1);
+  transform: scale(1.1);
+}
+
+/* ポモドーロ設定 */
+.pomodoro-settings {
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+.pom-setting-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.pom-setting-group label {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pom-setting-group input {
+  width: 80px;
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: rgba(15, 23, 42, 0.85);
+  color: inherit;
+  font-size: 0.9rem;
+}
+
+body.theme-light .pom-setting-group input {
+  background: rgba(248, 250, 252, 1);
+}
+
+.pom-note {
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* ポモドーロ統計表示 */
+.pomodoro-stats {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  text-align: center;
+  opacity: 0.9;
+}
+
+/* 世界時計 */
+.worldclock-card {
+}
+
+.worldclock-note {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin: 2px 0 8px;
+}
+
+.worldclock-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+  margin-bottom: 8px;
+}
+
+.worldclock-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.worldclock-label select,
+.worldclock-label input {
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: rgba(15, 23, 42, 0.85);
+  color: inherit;
+  font-size: 0.9rem;
+}
+
+body.theme-light .worldclock-label select,
+body.theme-light .worldclock-label input {
+  background: rgba(248, 250, 252, 1);
+}
+
+.worldclock-add-btn {
+  white-space: nowrap;
+}
+
+.worldclock-list {
+  margin-top: 4px;
+}
+
+.worldclock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.worldclock-table th,
+.worldclock-table td {
+  padding: 4px 6px;
+  text-align: left;
+}
+
+.worldclock-table thead {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.worldclock-table tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+body.theme-light .worldclock-table tbody tr:nth-child(even) {
+  background: rgba(243, 244, 246, 0.9);
+}
+
+.worldclock-empty {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+
+.worldclock-offset {
+  font-size: 0.78rem;
+  opacity: 0.85;
+}
+
+/* 設定モーダル */
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.settings-overlay.active {
+  display: flex;
+}
+
+.settings-modal {
+  width: min(360px, 90vw);
+  border-radius: 18px;
+  padding: 14px 16px 16px;
+  background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.5), #020617);
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+}
+
+body.theme-light .settings-modal {
+  background: radial-gradient(circle at top left, rgba(191, 219, 254, 0.9), #ffffff);
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.settings-title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.settings-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settings-group select {
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148, 163, 184, 0.9);
+  background: rgba(15, 23, 42, 0.9);
+  color: inherit;
+}
+
+body.theme-light .settings-group select {
+  background: rgba(248, 250, 252, 1);
+}
+
+.settings-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.settings-hint {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.settings-close-btn {
+  font-size: 1rem;
+}
+
+/* フッター */
+.app-footer {
+  margin-top: 4px;
+  padding: 6px 4px 2px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  opacity: 0.75;
+}

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Multi Clock Lab v0.5</title>
+    <meta
+      name="description"
+      content="Multi Clock Lab v0.5 - Kunamao が作る多機能時計サイト（時計・ストップウォッチ・タイマー・アラーム・ポモドーロ・世界時計）。"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body class="theme-dark">
+    <div class="app">
+      <header class="app-header">
+        <div class="branding">
+          <span class="logo-clock">🕒</span>
+          <span class="site-title">Multi Clock Lab</span>
+          <span class="site-version">v0.5</span>
+        </div>
+        <div class="header-actions">
+          <button
+            id="settingsOpenBtn"
+            class="theme-toggle"
+            aria-label="設定"
+          >
+            ⚙
+          </button>
+          <button
+            id="themeToggle"
+            class="theme-toggle"
+            aria-label="テーマ切り替え"
+          >
+            🌞
+          </button>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <nav class="tab-nav">
+          <button class="tab-button active" data-tab="clock">時計</button>
+          <button class="tab-button" data-tab="stopwatch">ストップウォッチ</button>
+          <button class="tab-button" data-tab="timer">タイマー</button>
+          <button class="tab-button" data-tab="alarm">アラーム</button>
+          <button class="tab-button" data-tab="pomodoro">ポモドーロ</button>
+          <button class="tab-button" data-tab="world">世界時計</button>
+        </nav>
+
+        <!-- 時計タブ -->
+        <section class="tab-content active" id="tab-clock">
+          <div class="clock-layout">
+            <!-- デジタル時計 -->
+            <div class="card digital-clock-card">
+              <div class="digital-time" id="digitalTime">
+                <span class="digit" id="digit-h1">-</span>
+                <span class="digit" id="digit-h2">-</span>
+                <span class="digit-separator">:</span>
+                <span class="digit" id="digit-m1">-</span>
+                <span class="digit" id="digit-m2">-</span>
+                <span class="digit-separator">:</span>
+                <span class="digit" id="digit-s1">-</span>
+                <span class="digit" id="digit-s2">-</span>
+              </div>
+              <div class="digital-date" id="digitalDate">---- / -- / -- (---)</div>
+              <div class="digital-controls">
+                <button id="toggleFormatBtn" class="pill-button">
+                  24h
+                </button>
+              </div>
+            </div>
+
+            <!-- アナログ時計 -->
+            <div class="card analog-clock-card">
+              <div class="analog-title">アナログ時計</div>
+              <div class="analog-clock">
+                <div class="clock-face">
+                  <div class="hand hour-hand" id="hourHand"></div>
+                  <div class="hand minute-hand" id="minuteHand"></div>
+                  <div class="hand second-hand" id="secondHand"></div>
+                  <div class="center-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ストップウォッチタブ -->
+        <section class="tab-content" id="tab-stopwatch">
+          <div class="card tool-card">
+            <h2 class="tool-title">ストップウォッチ</h2>
+
+            <div class="tool-display stopwatch-display" id="stopwatchDisplay">
+              00:00.00
+            </div>
+
+            <div class="tool-buttons">
+              <button id="swStartPause" class="primary-button">
+                スタート
+              </button>
+              <button id="swLap" class="pill-button" disabled>
+                ラップ
+              </button>
+              <button id="swReset" class="pill-button" disabled>
+                リセット
+              </button>
+            </div>
+
+            <div class="lap-list">
+              <div class="lap-list-header">ラップ一覧</div>
+              <table class="lap-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>ラップ</th>
+                    <th>合計</th>
+                  </tr>
+                </thead>
+                <tbody id="swLapTbody"></tbody>
+              </table>
+              <div class="lap-empty" id="swLapEmpty">ラップはまだありません。</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- タイマータブ -->
+        <section class="tab-content" id="tab-timer">
+          <div class="card tool-card">
+            <h2 class="tool-title">タイマー</h2>
+
+            <div class="tool-display timer-display" id="timerDisplay">
+              00:00
+            </div>
+
+            <div class="timer-input-row">
+              <label class="timer-input-label">
+                分
+                <input
+                  type="number"
+                  id="timerMinutes"
+                  min="0"
+                  max="599"
+                  value="0"
+                  inputmode="numeric"
+                />
+              </label>
+              <label class="timer-input-label">
+                秒
+                <input
+                  type="number"
+                  id="timerSeconds"
+                  min="0"
+                  max="59"
+                  value="0"
+                  inputmode="numeric"
+                />
+              </label>
+            </div>
+
+            <div class="timer-presets">
+              <span class="timer-presets-label">プリセット:</span>
+              <button class="pill-button timer-preset" data-seconds="60">
+                1分
+              </button>
+              <button class="pill-button timer-preset" data-seconds="180">
+                3分
+              </button>
+              <button class="pill-button timer-preset" data-seconds="300">
+                5分
+              </button>
+              <button class="pill-button timer-preset" data-seconds="600">
+                10分
+              </button>
+              <button class="pill-button timer-preset" data-seconds="1500">
+                25分
+              </button>
+            </div>
+
+            <div class="tool-buttons">
+              <button id="timerStartPause" class="primary-button">
+                スタート
+              </button>
+              <button id="timerReset" class="pill-button" disabled>
+                リセット
+              </button>
+            </div>
+
+            <div class="timer-status" id="timerStatus">
+              待機中
+            </div>
+
+            <audio
+              id="timerEndSound"
+              src="assets/sound/timer_end.mp3"
+              preload="auto"
+            ></audio>
+          </div>
+        </section>
+
+        <!-- アラームタブ -->
+        <section class="tab-content" id="tab-alarm">
+          <div class="card tool-card alarm-card">
+            <h2 class="tool-title">アラーム</h2>
+
+            <div class="alarm-form">
+              <label class="alarm-time-label">
+                時刻
+                <input
+                  type="time"
+                  id="alarmTimeInput"
+                  required
+                />
+              </label>
+              <label class="alarm-label-label">
+                ラベル
+                <input
+                  type="text"
+                  id="alarmLabelInput"
+                  placeholder="起きる / 勉強 / 部活 など"
+                  maxlength="32"
+                />
+              </label>
+              <button id="alarmAddBtn" class="primary-button alarm-add-btn">
+                追加
+              </button>
+            </div>
+
+            <div class="alarm-list">
+              <div class="alarm-list-header">アラーム一覧</div>
+              <table class="alarm-table">
+                <thead>
+                  <tr>
+                    <th>ON</th>
+                    <th>時刻</th>
+                    <th>ラベル</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="alarmTableBody"></tbody>
+              </table>
+              <div class="alarm-empty" id="alarmEmptyMessage">
+                登録されているアラームはありません。
+              </div>
+            </div>
+
+            <div class="alarm-banner" id="alarmBanner" aria-live="polite"></div>
+
+            <div class="alarm-note">
+              ※このサイトを開いている間のみアラームは鳴ります。
+            </div>
+
+            <audio
+              id="alarmSound"
+              src="assets/sound/alarm_end.mp3"
+              preload="auto"
+            ></audio>
+          </div>
+        </section>
+
+        <!-- ポモドーロタブ -->
+        <section class="tab-content" id="tab-pomodoro">
+          <div class="card tool-card pomodoro-card">
+            <h2 class="tool-title">ポモドーロタイマー</h2>
+
+            <div class="pomodoro-status">
+              <div class="pom-phase" id="pomPhaseLabel">待機中</div>
+              <div class="tool-display pomodoro-display" id="pomDisplay">
+                25:00
+              </div>
+            </div>
+
+            <div class="pomodoro-progress" id="pomProgressDots"></div>
+
+            <div class="tool-buttons">
+              <button id="pomStartPause" class="primary-button">
+                スタート
+              </button>
+              <button id="pomSkip" class="pill-button" disabled>
+                スキップ
+              </button>
+              <button id="pomReset" class="pill-button" disabled>
+                リセット
+              </button>
+            </div>
+
+            <div class="pomodoro-settings">
+              <div class="pom-setting-group">
+                <label>
+                  作業 (分)
+                  <input
+                    type="number"
+                    id="pomWorkMinutes"
+                    min="1"
+                    max="180"
+                    value="25"
+                  />
+                </label>
+                <label>
+                  休憩 (分)
+                  <input
+                    type="number"
+                    id="pomBreakMinutes"
+                    min="1"
+                    max="60"
+                    value="5"
+                  />
+                </label>
+              </div>
+              <div class="pom-note">
+                ※設定変更は停止中のみ有効です。4セットごとに少し長めの休憩になります。
+              </div>
+            </div>
+
+            <div class="pomodoro-stats">
+              <span id="pomStatsSummary">
+                今日の集中時間: 0分 / 完了セッション: 0
+              </span>
+            </div>
+
+            <audio
+              id="pomPhaseSound"
+              src="assets/sound/pomodoro_phase.mp3"
+              preload="auto"
+            ></audio>
+          </div>
+        </section>
+
+        <!-- 世界時計タブ -->
+        <section class="tab-content" id="tab-world">
+          <div class="card tool-card worldclock-card">
+            <h2 class="tool-title">世界時計</h2>
+
+            <p class="worldclock-note">
+              よく使う都市の時刻を一覧で表示します。プリセットから選ぶか、タイムゾーンID（例:
+              Europe/Berlin）を直接指定できます。
+            </p>
+
+            <div class="worldclock-form">
+              <label class="worldclock-label">
+                プリセット
+                <select id="wcPresetSelect">
+                  <option value="Asia/Tokyo" data-label="Tokyo">
+                    東京 (Asia/Tokyo)
+                  </option>
+                  <option value="Europe/London" data-label="London">
+                    ロンドン (Europe/London)
+                  </option>
+                  <option value="Europe/Paris" data-label="Paris">
+                    パリ (Europe/Paris)
+                  </option>
+                  <option value="America/New_York" data-label="New York">
+                    ニューヨーク (America/New_York)
+                  </option>
+                  <option value="America/Los_Angeles" data-label="Los Angeles">
+                    ロサンゼルス (America/Los_Angeles)
+                  </option>
+                  <option value="Australia/Sydney" data-label="Sydney">
+                    シドニー (Australia/Sydney)
+                  </option>
+                </select>
+              </label>
+
+              <label class="worldclock-label">
+                カスタムタイムゾーン
+                <input
+                  type="text"
+                  id="wcCustomTz"
+                  placeholder="例: Europe/Berlin"
+                />
+              </label>
+
+              <label class="worldclock-label">
+                表示名
+                <input
+                  type="text"
+                  id="wcLabelInput"
+                  placeholder="表示名（空なら自動）"
+                  maxlength="32"
+                />
+              </label>
+
+              <button id="wcAddBtn" class="primary-button worldclock-add-btn">
+                追加
+              </button>
+            </div>
+
+            <div class="worldclock-list">
+              <table class="worldclock-table">
+                <thead>
+                  <tr>
+                    <th>都市</th>
+                    <th>時刻</th>
+                    <th>日付</th>
+                    <th>UTC</th>
+                    <th>時差</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="worldclockTableBody"></tbody>
+              </table>
+              <div class="worldclock-empty" id="worldclockEmptyMessage">
+                表示中の都市はありません。上のフォームから追加できます。
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="app-footer">
+        <span>Multi Clock Lab v0.5</span>
+        <span>© 2025 Kunamao</span>
+      </footer>
+    </div>
+
+    <!-- 設定モーダル -->
+    <div
+      id="settingsOverlay"
+      class="settings-overlay"
+      aria-hidden="true"
+    >
+      <div
+        class="settings-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settingsTitle"
+      >
+        <div class="settings-header">
+          <h2 id="settingsTitle" class="settings-title">設定</h2>
+          <button
+            id="settingsCloseBtn"
+            class="icon-button settings-close-btn"
+            aria-label="設定を閉じる"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="settings-body">
+          <div class="settings-group">
+            <label for="settingDefaultTab">起動時のタブ</label>
+            <select id="settingDefaultTab">
+              <option value="clock">時計</option>
+              <option value="stopwatch">ストップウォッチ</option>
+              <option value="timer">タイマー</option>
+              <option value="alarm">アラーム</option>
+              <option value="pomodoro">ポモドーロ</option>
+              <option value="world">世界時計</option>
+            </select>
+            <div class="settings-hint">
+              次回ブラウザを開いたときに、ここで選んだタブからスタートします。
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <label class="settings-checkbox">
+              <input
+                type="checkbox"
+                id="settingSoundEnabled"
+                checked
+              />
+              効果音を有効にする（タイマー・アラーム・ポモドーロ）
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/settings.js" defer></script>
+    <script src="assets/js/utils.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/clock.js" defer></script>
+    <script src="assets/js/stopwatch.js" defer></script>
+    <script src="assets/js/timer.js" defer></script>
+    <script src="assets/js/alarm.js" defer></script>
+    <script src="assets/js/pomodoro.js" defer></script>
+    <script src="assets/js/worldclock.js" defer></script>
+  </body>
+</html>
